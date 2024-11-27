@@ -1,20 +1,19 @@
-https://www.amazon.com/s?k={keyword}&crid=2DJCUZDFJ5M1U&sprefix=nice%2Caps%2C736&ref=nb_sb_noss_2
+rapidapi.com
 
-https://www.ebay.com/sch/i.html?_from=R40&_trksid=p4432023.m570.l1313&_nkw={keyword}&_sacat=0
+Amazon APIs data real-time:
+"const url = 'https://real-time-amazon-data.p.rapidapi.com/search?query=Phone&page=1&country=US&sort_by=RELEVANCE&product_condition=ALL&is_prime=false&deals_and_discounts=NONE';
+const options = {
+	method: 'GET',
+	headers: {
+		'x-rapidapi-key': '2fe533a9e9mshfb3fcc41ad35194p1d1144jsnd13b467033f0',
+		'x-rapidapi-host': 'real-time-amazon-data.p.rapidapi.com'
+	}
+};
 
-eBay:
-Sign up for the eBay Developers Program.
-Create a new application in the developer dashboard.
-Retrieve your AppID (SECURITY-APPNAME) from the application details.
-
-Amazon:
-Create an Amazon Developer account.
-Set up an application in the Amazon Developer Console.
-Obtain your access keys from the application settings.
-
-Shopee:
-
-Register as a seller on Shopee.
-Access the Shopee Developer Portal.
-Create an application to get your partner ID and shop ID.
-By following these steps, you can acquire the necessary SECURITY-APPNAME or equivalent credentials for accessing the APIs of eBay, Amazon, and Shopee.
+try {
+	const response = await fetch(url, options);
+	const result = await response.text();
+	console.log(result);
+} catch (error) {
+	console.error(error);
+}"

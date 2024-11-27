@@ -1,23 +1,32 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const compareButton = document.getElementById('compare-button');
-    const keywordInput = document.getElementById('keyword-input');
-
-    compareButton.addEventListener('click', () => {
-        const keyword = keywordInput.value;
-        if (keyword) {
-            // Logic to initiate price comparison with the entered keyword
-            chrome.storage.local.set({ keyword: keyword }, () => {
-                console.log(`Keyword saved: ${keyword}`);
-                // You can also send a message to content.js to start fetching prices
-            });
-        } else {
-            alert('Please enter a keyword to compare prices.');
-        }
-    });
-
-    // Logic to display saved prices or track new prices
-    chrome.storage.local.get(['prices'], (result) => {
-        const priceInfoDiv = document.getElementById('price-info');
-        priceInfoDiv.innerHTML = result.prices ? result.prices.join('<br>') : 'No prices found.';
-    });
+document.getElementById('fetchPriceBtn').addEventListener('click', async () => {
+    const keyword = document.getElementById('keyword').value.trim();
+    console.log(keyword,"here is keyword");
+    if (keyword) {
+        const price = await fetchPrice(keyword);
+        document.getElementById('result').innerText = `Price of the first item: ${price}`;
+    } else {
+        alert('Please enter a keyword.');
+    }
 });
+
+async function fetchPrice(keyword) {
+    const url = `https://real-time-amazon-data.p.rapidapi.com/search?query=${keyword}&page=1&country=US&sort_by=RELEVANCE&product_condition=ALL&is_prime=false&deals_and_discounts=NONE`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': '2fe533a9e9mshfb3fcc41ad35194p1d1144jsnd13b467033f0',
+            'x-rapidapi-host': 'real-time-amazon-data.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        console.log(result.data.products[0].product_price);
+        return result.data.products[0].product_price; // Assuming the price is in the first item's data
+        // Check if items exist in the result
+    } catch (error) {
+        console.error(error);
+        return 'Error fetching price';
+    }
+}
