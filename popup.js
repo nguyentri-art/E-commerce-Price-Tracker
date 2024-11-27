@@ -1,15 +1,22 @@
+
 document.getElementById('fetchPriceBtn').addEventListener('click', async () => {
     const keyword = document.getElementById('keyword').value.trim();
     console.log(keyword,"here is keyword");
+    const loadingMessage = document.createElement('div');
+    loadingMessage.innerText = 'Loading...Please wait a sec... ^^ ';
+    document.body.appendChild(loadingMessage); // Show loading message
+
     if (keyword) {
-        const price = await fetchPrice(keyword);
-        document.getElementById('result').innerText = `Price of the first item: ${price}`;
+        const priceAmazon = await fetchPriceAmazon(keyword);
+        const priceShopee = await fetchPriceShoppe(keyword);
+        document.getElementById('resultAmazon').innerText = `Price at the Amazon: "${keyword}" is ${priceAmazon}`;
+        document.getElementById('resultShopee').innerText = `Price at the Shopee: "${keyword}" is $${priceShopee}`; // Format price with periods
     } else {
         alert('Please enter a keyword.');
     }
 });
 
-async function fetchPrice(keyword) {
+async function fetchPriceAmazon(keyword) {
     const url = `https://real-time-amazon-data.p.rapidapi.com/search?query=${keyword}&page=1&country=US&sort_by=RELEVANCE&product_condition=ALL&is_prime=false&deals_and_discounts=NONE`;
     const options = {
         method: 'GET',
@@ -28,5 +35,27 @@ async function fetchPrice(keyword) {
     } catch (error) {
         console.error(error);
         return 'Error fetching price';
+    }
+}
+
+async function fetchPriceShoppe(keyword) {
+    const url = `https://shopee14.p.rapidapi.com/shopee/search-shopee-products/?token=DgZCZzpDuh&keyword=${keyword}}&country=singapore`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': '2fe533a9e9mshfb3fcc41ad35194p1d1144jsnd13b467033f0',
+            'x-rapidapi-host': 'shopee14.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        console.log(result.results[0].price);
+        const resultUSD = (result.results[0].price / 1000) / 23000;
+        return resultUSD.toFixed(2);
+    } catch (error) {
+        console.error(error);
+        return 'Sorry we have limit call by this :( ! support us for get away from this poor <3 ^^ ';
     }
 }
