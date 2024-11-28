@@ -8,9 +8,14 @@ document.getElementById('fetchPriceBtn').addEventListener('click', async () => {
 
     if (keyword) {
         const priceAmazon = await fetchPriceAmazon(keyword);
-        const priceShopee = await fetchPriceShoppe(keyword);
+        const priceShopee = await fetchPriceShopee(keyword);
+        const priceBestBuy = await fetchPriceBestBuy(keyword);
+        const priceAliExpress = await fetchPriceAliExpress(keyword);
         document.getElementById('resultAmazon').innerText = `Price at the Amazon: "${keyword}" is ${priceAmazon}`;
-        document.getElementById('resultShopee').innerText = `Price at the Shopee: "${keyword}" is $${priceShopee}`; // Format price with periods
+        document.getElementById('resultShopee').innerText = `Price at the Shopee: "${keyword}" is $${priceShopee}`; 
+        document.getElementById('resultBestBuy').innerText = `Price at the Best Buy: "${keyword}" is $${priceBestBuy}`; 
+        document.getElementById('resultAliExpress').innerText = `Price at the AliExpress: "${keyword}" is $${priceAliExpress}`; 
+
     } else {
         alert('Please enter a keyword.');
     }
@@ -34,11 +39,11 @@ async function fetchPriceAmazon(keyword) {
         // Check if items exist in the result
     } catch (error) {
         console.error(error);
-        return 'Error fetching price';
+        return 'Sorry we have limit call by this :( ! support us for get away from this poor <3 ^^ ';
     }
 }
 
-async function fetchPriceShoppe(keyword) {
+async function fetchPriceShopee(keyword) {
     const url = `https://shopee14.p.rapidapi.com/shopee/search-shopee-products/?token=DgZCZzpDuh&keyword=${keyword}}&country=singapore`;
     const options = {
         method: 'GET',
@@ -56,6 +61,48 @@ async function fetchPriceShoppe(keyword) {
         return resultUSD.toFixed(2);
     } catch (error) {
         console.error(error);
-        return 'Sorry we have limit call by this :( ! support us for get away from this poor <3 ^^ ';
+        return 'Sorry we have limit call by this :( ! support us at "https://alittledream.onrender.com/" for get away from this poor <3 ^^ ';
+    }
+}
+
+async function fetchPriceBestBuy(keyword){
+    const url = `https://bestbuy-product-data-api.p.rapidapi.com/bestbuy/?page=1&keyword=${keyword}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': '2fe533a9e9mshfb3fcc41ad35194p1d1144jsnd13b467033f0',
+            'x-rapidapi-host': 'bestbuy-product-data-api.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        console.log(result,"result =========");
+        return result[0].price;
+    } catch (error) {
+        console.error(error);
+        return 'Sorry we have limit call by this :( ! support us at "https://alittledream.onrender.com/" for get away from this poor <3 ^^ ';
+    }
+}
+
+async function fetchPriceAliExpress(keyword){
+    const url = `https://aliexpress-datahub.p.rapidapi.com/item_search?q=${keyword}&page=1&sort=default`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': '2fe533a9e9mshfb3fcc41ad35194p1d1144jsnd13b467033f0',
+            'x-rapidapi-host': 'aliexpress-datahub.p.rapidapi.com'
+        }
+    };
+
+    try {
+        const response = await fetch(url, options);
+        const result = await response.json();
+        console.log(result," here result AliExpress");
+        return result.result.resultList[0].item.sales;
+    } catch (error) {
+        console.error(error);
+        return 'Sorry we have limit call by this :( ! support us at "https://alittledream.onrender.com/" for get away from this poor <3 ^^ ';
     }
 }

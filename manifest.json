@@ -2,7 +2,7 @@
     "manifest_version": 3,
     "name": "Price Comparator",
     "version": "1.0",
-    "description": "Compare prices from e-shops using Amazon APIs.",
+    "description": "Compare prices from e-shops using Amazon APIs. A Production from Little Studio <3 from SG with love.",
     "permissions": [
         "activeTab",
         "scripting"
